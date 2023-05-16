@@ -3,7 +3,7 @@ import type { DefaultTheme } from 'vitepress/types'
 
 const ogUrl = 'https://unocss.dev/'
 const ogImage = `${ogUrl}og.png#1`
-const title = 'study site'
+const title = 'Study site'
 const description = `Tian Daoyi's study documents`
 
 const Fe: DefaultTheme.NavItemWithLink[] = [
