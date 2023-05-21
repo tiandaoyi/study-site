@@ -1,43 +1,83 @@
----
-title: Packages
-description: "UnoCSS Packages: available packages and what's included and enabled in unocss."
-outline: deep
----
+# 网络
 
-# Packages
+## OSI七层模型
 
-UnoCSS is a monorepo that contains multiple packages. This page lists all the packages and what's included in `unocss` package:
+![network-osi](/images/network-osi.png "network-osi")
 
-| Package                                                          | Description                                        | Included in `unocss` | Enabled |
-|------------------------------------------------------------------|----------------------------------------------------|----------------------| ------------------ |
-| [@unocss/core](/tools/core)                                      | The core library without preset                    | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />      | - |
-| [@unocss/cli](/integrations/cli)                                 | Command line interface for UnoCSS                  | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | - |
-| [@unocss/preset-uno](/presets/uno)                               | The default preset                                 | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" /> |
-| [@unocss/preset-mini](/presets/mini)                             | The minimal but essential rules and variants       | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" /> |
-| [@unocss/preset-wind](/presets/wind)                             | Tailwind / Windi CSS compact preset                | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" /> |
-| [@unocss/preset-attributify](/presets/attributify)               | Enables Attributify Mode for other rules           | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | No |
-| [@unocss/preset-tagify](/presets/tagify)                         | Enables Tagify Mode for other rules                | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | No |
-| [@unocss/preset-icons](/presets/icons)                           | Pure CSS Icons solution powered by Iconify         | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | No |
-| [@unocss/preset-web-fonts](/presets/web-fonts)                   | Web fonts (Google Fonts, etc.) support             | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | No |
-| [@unocss/preset-typography](/presets/typography)                 | The typography preset                              | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | No |
-| [@unocss/preset-rem-to-px](/presets/rem-to-px)                   | Coverts rem to px for utils                        | No                   | No |
-| [@unocss/transformer-variant-group](/transformers/variant-group) | Transformer for Windi CSS's variant group feature  | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | No |
-| [@unocss/transformer-directives](/transformers/directives)       | Transformer for CSS directives like `@apply`       | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | No |
-| [@unocss/transformer-compile-class](/transformers/compile-class) | Compile group of classes into one class            | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | No |
-| [@unocss/transformer-attributify-jsx](/transformers/attributify-jsx) | Support valueless attributify in JSX/TSX           | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | No |
-| [@unocss/extractor-pug](/extractors/pug)                         | Extractor for Pug                                  | No                   | - |
-| [@unocss/extractor-svelte](/extractors/svelte)                   | Extractor for Svelte                               | No                   | - |
-| [@unocss/autocomplete](/tools/autocomplete)                      | Utils for autocomplete                             | No                   | - |
-| [@unocss/config](/guide/config-file)                             | Configuration file loader                          | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | - |
-| [@unocss/reset](/guide/style-reset)                              | Collection of common CSS resets                    | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | No |
-| [@unocss/vite](/integrations/vite)                               | The Vite plugins                                   | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | - |
-| [@unocss/inspector](/tools/inspector)                            | The inspector UI for UnoCSS                        | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | - |
-| [@unocss/astro](/integrations/astro)                             | The Astro integration                              | <span class="block i-carbon:checkbox-checked-filled text-green-600 dark:text-green-400 w-2em h-2em" />                    | - |
-| [@unocss/webpack](/integrations/webpack)                         | The Webpack plugin                                 | No                   | - |
-| [@unocss/nuxt](/integrations/nuxt)                               | The Nuxt Module                                    | No                   | - |
-| [@unocss/next](/integrations/next)                               | The Next.js plugin                                 | No                   | - |
-| [@unocss/runtime](/integrations/runtime)                         | CSS-in-JS Runtime for UnoCSS                       | No                   | - |
-| [@unocss/eslint-plugin](/integrations/eslint)                    | ESLint plugin                                      | No                   | - |
-| [@unocss/eslint-config](/integrations/eslint)                    | ESLint config                                      | No                   | - |
-| [@unocss/postcss](/integrations/postcss)                         | The PostCSS plugin                                 | No                   | - |
-| [VS Code Extension](/integrations/vscode)                        | UnoCSS for VS Code                                 | -                    | - |
+## 应用层
+
+向用户提供应用服务时通信的活动
+
+### HTTP协议
+
+包括FTP、DNS、HTTP、SMTP、POP3等，主要解决如何包装数据，以及如何标识数据内容。
+
+## 传输层
+
+提供处于网络连接中的两台计算机之间的数据传输
+
+### TCP协议
+
+提供可靠的字节流服务，采用三次握手建立一个连接。
+
+#### 三次握手
+
+![network-tcp1](/images/network-tcp1.png "network-tcp1")
+
+目的：确认双方的接收能力和发送能力是否正常、指定自己的初始化序列号为后面的可靠性传送做准备。
+
+1. 客户端发送SYN报文到服务器端发起握手，发送完之后客户端处于SYN_SEND状态。
+2. 服务端收到SYN报文之后回复SYN和ACK报文给客户端
+3. 客户端收到SYN和ACK，向服务端发送一个ACK报文，客户端转为established状态，此时服务端收到ACK报文后也处于established状态，TCP连接建立成功。
+
+#### 四次挥手
+
+![network-tcp2](/images/network-tcp2.jpg "network-tcp2")
+
+目的：断开连接
+
+1. 客户端发送一个FIN报文，报文中会指定一个序列号，此时客户端处于FIN_WAIT_1状态。
+2. 服务端收到FIN报文之后，会发送一个ACK报文，且把客户端的序列号+1作为ACK报文的序列号，此时服务端处于CLOSE_WAIT状态。
+3. 如果服务端也想断开连接了，和客户端的第一步一样，发送一个FIN报文给客户端。
+4. 客户端收到FIN报文之后，向服务端发送ACK报文，且把服务端的序列号+1作为自己ACK报文的序列号，此时客户端处于TIME_WAIT状态。
+
+服务端收到ACK报文之后，就处于关闭连接了，客户端等待了2MSL之后也会关闭连接。
+
+#### 常见的TCP请求方法
+
+1. GET：请求获取URL位置的资源
+2. HEAD：请求获取URL位置资源的响应消息报告，即获得该资源的头部信息
+3. POST：请求向URL位置的资源后附加新的数据
+4. PUT：请求向URL位置存储一个资源，覆盖原URL位置的资源
+5. PATCH：请求局部更新URL位置的资源，即改变该处资源的部分内容
+6. DELETE：请求删除URL位置存储的资源
+
+### UDP协议
+
+提供面向事务的简单不可靠信息传送服务，不需要建立连接。
+
+### TCP和UDP区别
+
+![network-tcpudp](/images/network-tcpudp.png "network-tcpudp")
+
+## 网络层
+
+负责：处理网络上流动的数据包，规划数据通过网络中的路由和交换设备到达目标计算机。
+
+工作：增加MAC地址转发给数据链路层，进行流量控制，拥塞控制等。
+
+## 数据链路层
+
+负责：处理网络层传下来的IP数据报，进一步划分成帧，并传输给物理层。
+
+工作：进行CRC检测，差错控制等。
+
+## 物理层
+
+负责：利用传输介质为数据链路层提供物理连接。
+
+工作：定义物理设备如何传输数据。
+
+### IP协议
+
+负责把数据从一台计算机通过网络发送到另一台计算机，数据被分割成一小段一小段进行传输，每一段都包括发送端和接收端的IP地址。
