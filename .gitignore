@@ -1,3 +1,5 @@
 .vitepress/cache/
 .vitepress/dist/
 public/user-avatars
+
+node_modules
