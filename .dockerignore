@@ -1,0 +1,22 @@
+**/node_modules
+**/dist
+**/build
+
+
+
+node_modules
+.git
+.husky
+.github
+.vscode
+
+yarn-error.log
+Dockerfile
+
+
+# packages/docs/
+# packages/web/.linaria-cache/
+# packages/web/dist/
+
+
+
