@@ -4,7 +4,7 @@ import Theme from 'vitepress/theme'
 import './rainbow.css'
 import './vars.css'
 import './overrides.css'
-import 'unocss'
+import 'uno.css'
 
 import HomePage from './components/HomePage.vue'
 

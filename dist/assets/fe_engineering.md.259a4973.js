@@ -1,0 +1,1 @@
+import{_ as e,o as n,c as t}from"./chunks/framework.98960eec.js";const _=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"fe/engineering.md","filePath":"fe/engineering.md","lastUpdated":1684160613000}'),a={name:"fe/engineering.md"};function r(i,o,s,c,d,p){return n(),t("div")}const g=e(a,[["render",r]]);export{_ as __pageData,g as default};
