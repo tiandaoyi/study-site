@@ -5,3 +5,5 @@ public/user-avatars
 node_modules
 
 dist
+
+**/.DS_Store
