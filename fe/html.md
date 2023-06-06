@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # HTML
 
 ## HTML5新标签
