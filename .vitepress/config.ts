@@ -18,44 +18,19 @@ const Fe: DefaultTheme.NavItemWithLink[] = [
 ]
 
 const Node: DefaultTheme.NavItemWithLink[] = [
-  { text: 'javascript', link: '/node/javascript' },
-  { text: 'html', link: '/node/html' },
-  { text: 'css', link: '/node/css' },
-  { text: '网络', link: '/node/network' },
-  { text: '浏览器', link: '/node/browser' },
-  { text: '框架', link: '/node/frame' },
-  { text: '数据流', link: '/node/dataflow' },
-  { text: '工程化', link: '/node/engineering' },
+  { text: 'node', link: '/node/node' },
 ]
 
 const Algorithm: DefaultTheme.NavItemWithLink[] = [
-  { text: 'javascript', link: '/algorithm/javascript' },
-  { text: 'html', link: '/algorithm/html' },
-  { text: 'css', link: '/algorithm/css' },
-  { text: '网络', link: '/algorithm/network' },
-  { text: '浏览器', link: '/algorithm/browser' },
-  { text: '数据流', link: '/algorithm/dataflow' },
-  { text: '工程化', link: '/algorithm/engineering' },
+  { text: '算法', link: '/algorithm/algorithm' },
 ]
 
 const Database: DefaultTheme.NavItemWithLink[] = [
-  { text: 'javascript', link: '/database/javascript' },
-  { text: 'html', link: '/database/html' },
-  { text: 'css', link: '/database/css' },
-  { text: '网络', link: '/database/network' },
-  { text: '浏览器', link: '/database/browser' },
-  { text: '数据流', link: '/database/dataflow' },
-  { text: '工程化', link: '/database/engineering' },
+  { text: '数据库', link: '/database/database' },
 ]
 
 const ComputerBasics: DefaultTheme.NavItemWithLink[] = [
-  { text: 'javascript', link: '/computerBasics/javascript' },
-  { text: 'html', link: '/computerBasics/html' },
-  { text: 'css', link: '/computerBasics/css' },
-  { text: '网络', link: '/computerBasics/network' },
-  { text: '浏览器', link: '/computerBasics/browser' },
-  { text: '数据流', link: '/computerBasics/dataflow' },
-  { text: '工程化', link: '/computerBasics/engineering' },
+  { text: '计算机基础', link: '/computerBasics/computerBasics' },
 ]
 
 const Nav: DefaultTheme.NavItem[] = [
