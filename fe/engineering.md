@@ -145,8 +145,13 @@ preload chunk 具有中等优先级，并立即下载。prefetch chunk 在浏览
 
 sourceMap: 是将编译打包压缩后的代码，映射成源码
 
-生产环境推荐：cheap-module-eval-source-map，打包速度最快，映射到行
-开发环境推荐：cheap-module-source-map，打包速度快，映射到行，不能映射到列，调试不变
+生产环境：
+
+hidden-source-map: 生成的 Source Map 文件不会被暴露，适用于保护源代码的安全性。
+
+开发环境：
+eval-source-map: 在每个模块的末尾添加注释形式的 Source Map，可以提供准确的行列信息，但会增加打包文件的体积。
+cheap-module-eval-source-map: 在每行代码末尾添加注释形式的 Source Map，对打包文件的体积影响较小，但提供的精确度较低。
 
 ### 性能优化与打包速度提升
 

@@ -180,7 +180,6 @@ export default defineConfig({
     // },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/tiandaoyi/study-site' },
-      // { icon: 'discord', link: 'http://www.okdaoyi.com' },
     ],
     footer: {
       message: 'Released under the MIT License.',
