@@ -14,6 +14,8 @@ WORKDIR /app
 COPY .dockerignore .
 COPY ./ /app
 
+RUN apk update && apk add git
+
 RUN ["pnpm", "install"]
 
 RUN ["pnpm", "docs:build"]
