@@ -8,7 +8,7 @@ outline: deep
 
 ### 适用场景
 
-node.js 使用了一个事件驱动、非阻塞式 I/O 的模型，使其轻量又高效，适合运用在高并发，I/O 密集、少量业务逻辑的场景。
+Node.js 使用了一个事件驱动、非阻塞式 I/O 的模型，使其轻量又高效，适合运用在高并发，I/O 密集、少量业务逻辑的场景。
 
 ### 单线程架构模型
 
@@ -96,6 +96,7 @@ exec('ls', function(error, stdout, stderr){
 
 ```js
 const fs = require('fs');
+
 // 直接读取文件
 fs.open('./xxx.js', 'r', (err, data) => {
   if (err) {
@@ -103,6 +104,7 @@ fs.open('./xxx.js', 'r', (err, data) => {
   }
   console.log(data)
 })
+
 // 流的方式读取、写入
 let readStream = fs.createReadStream('./a.js');
 let writeStream = fs.createWriteStream('./b.js')
