@@ -1,9 +1,10 @@
 FROM node:16-alpine as build
 LABEL maintainer "495060071@qq.com"
 
+RUN apk update && apk add git
+
 # 安装npm
 RUN npm config set registry https://registry.npmmirror.com/
-
 # 安装pnpm
 RUN npm install -g pnpm
 RUN pnpm config set registry https://registry.npmmirror.com/
