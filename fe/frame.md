@@ -4,6 +4,34 @@
 
 Vue是一个MVVM框架，MVVM是Model-View-ViewModel缩写，也就是把MVC中的Controller演变成ViewModel。Model层代表数据模型，View代表UI组件，ViewModel是View和Model层的桥梁，数据会绑定到viewModel层并自动将数据渲染到页面中，视图变化的时候会通知viewModel层更新数据。
 
+### Vue3
+
+模版语法：
+
+添加全局属性(一个用于注册能够被应用内所有组件实例访问到的全局属性的对象): app.config.globalProperties
+
+响应式基础：
+
+ref(): 函数声明响应式状态， `.value`进行赋值使用，模版中不需要`.value`(会自动解包)。`const count = ref(0)`
+shallowRef(): ref的浅层作用形式。
+DOM更新时机: 非同步，会在next tick更新周期中缓存状态的修改。
+reactive(): **仅限于对象类型（集合类型），替换和解包（非ref）会丢失响应性**, ref是将内部值包装在特殊对象，而reactive将使对象本身具有响应式。`const state = reactive({ count: 0 })`
+shallowReactive(): rective()的浅层作用形式。
+
+
+
+### Vue3相比vue2的优点
+
+1. 性能优化：Vue3在性能方面进行了很多优化，包括更好的虚拟DOM渲染性能和更小的包大小
+2. Composition API：Vue 3 引入了 Composition API，这是一种新的组织组件逻辑的方式。它使组件逻辑更容易组织、复用和测试。（Vue 2也支持了）
+3. Teleport 组件： Vue 3 引入了 Teleport 组件，它允许你将组件的内容渲染到 DOM 中的任意位置，而不必依赖父组件的 DOM 结构。（比如模态框）
+4. 全局 API 修改： Vue 3 将一些全局 API 进行了修改，以更好地支持 Tree-Shaking 和模块化。例如，Vue.directive 变成了 app.directive。
+5. 多个根元素支持： 在 Vue 2 中，每个组件只能有一个根元素，而在 Vue 3 中，组件可以有多个根元素。
+6. 响应式系统优化： Vue 3 对响应式系统进行了优化，提升了响应式数据的更新性能。
+7. Fragments： Vue 3 引入了 Fragments，它允许你在不添加额外节点的情况下返回多个节点。
+8. 更好的 TypeScript 支持： Vue 3 提供了更好的 TypeScript 支持，包括更准确的类型推断和类型定义。
+9. 更强大的插槽： Vue 3 的插槽支持更强大的特性，如动态插槽名称和新的 `<template #xxx>` 语法。（可以单独渲染父组件和子组件）
+
 ### Vue的响应式原理
 
 ![network-osi](/images/frame-vue.png "frame-vue")
@@ -64,21 +92,6 @@ let app = new Vue({
 })
 ```
 
-
-
-
-### Vue3相比vue2的优点
-
-1. 性能优化：Vue3在性能方面进行了很多优化，包括更好的虚拟DOM渲染性能和更小的包大小
-2. Composition API：Vue 3 引入了 Composition API，这是一种新的组织组件逻辑的方式。它使组件逻辑更容易组织、复用和测试。（Vue 2也支持了）
-3. Teleport 组件： Vue 3 引入了 Teleport 组件，它允许你将组件的内容渲染到 DOM 中的任意位置，而不必依赖父组件的 DOM 结构。（比如模态框）
-4. 全局 API 修改： Vue 3 将一些全局 API 进行了修改，以更好地支持 Tree-Shaking 和模块化。例如，Vue.directive 变成了 app.directive。
-5. 多个根元素支持： 在 Vue 2 中，每个组件只能有一个根元素，而在 Vue 3 中，组件可以有多个根元素。
-6. 响应式系统优化： Vue 3 对响应式系统进行了优化，提升了响应式数据的更新性能。
-7. Fragments： Vue 3 引入了 Fragments，它允许你在不添加额外节点的情况下返回多个节点。
-8. 更好的 TypeScript 支持： Vue 3 提供了更好的 TypeScript 支持，包括更准确的类型推断和类型定义。
-9. 更强大的插槽： Vue 3 的插槽支持更强大的特性，如动态插槽名称和新的 `<template #xxx>` 语法。（可以单独渲染父组件和子组件）
-
 ### Vue3与Vue2源码层面
 
 实现双向绑定 Proxy 与 Object.defineProperty 相比优劣如何?
@@ -88,3 +101,4 @@ let app = new Vue({
 - `Object.definedProperty`不支持数组，更准确的说是不支持数组的各种API，因为如果仅仅考虑`ary[i] = value` 这种情况，是可以劫持 的，但是这种劫持意义不大。而Proxy可以支持数组的各种API。
 - 尽管`Object.defineProperty`有诸多缺陷，但是其兼容性要好于Proxy。
 
+## React
