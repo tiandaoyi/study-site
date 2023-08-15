@@ -242,13 +242,26 @@ onMounted(() => {
 
 如果组件上使用ref，则引用的值是组件的实例。如果子组件用的是setup，则属性必须通过defineExpose暴露，父组件才能访问。（setup中的东西默认是私有）
 
-#### 组件基础
+#### 组件
 
 定义属性
 
 ```html
 <script setup>
 defineProps(['title'])
+
+defineProps({
+  title: String,
+})
+
+</script>
+
+// ts中可用使用类型标注
+<script setup lang="ts">
+defineProps<{
+  title?: string
+  likes?: number
+}>()
 </script>
 ```
 
@@ -257,10 +270,11 @@ defineProps(['title'])
 ```html
 <script setup>
 defineEmits(['title'])
+defineEmits({
+  title: 
+})
 </script>
 ```
-
-#### 深入组件
 
 全局注册: 不会被tree-shaking，依赖关系不明确
 
@@ -281,7 +295,6 @@ defineEmits(['title'])
   import ComponentA from './ComponentA.vue'
 </script>
 ```
-
 
 ### Vue3相比vue2的优点
 
