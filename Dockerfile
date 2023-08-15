@@ -7,8 +7,8 @@ RUN apk update && apk add git
 RUN npm config set registry https://registry.npmmirror.com/
 # 安装pnpm
 RUN npm install -g pnpm
-RUN pnpm config set registry https://registry.npmmirror.com/
-RUN pnpm config set sass_binary_site https://npm.taobao.org/mirrors/node-sass/
+# RUN pnpm config set registry https://registry.npmmirror.com/
+# RUN pnpm config set sass_binary_site https://npm.taobao.org/mirrors/node-sass/
 
 WORKDIR /app
 
