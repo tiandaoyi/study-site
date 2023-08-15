@@ -15,6 +15,7 @@ const Fe: DefaultTheme.NavItemWithLink[] = [
   { text: '框架', link: '/fe/frame' },
   { text: '数据流', link: '/fe/dataflow' },
   { text: '工程化', link: '/fe/engineering' },
+  { text: 'typescript', link: '/fe/typescript' },
 ]
 
 const Node: DefaultTheme.NavItemWithLink[] = [
