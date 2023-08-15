@@ -4,20 +4,283 @@
 
 Vue是一个MVVM框架，MVVM是Model-View-ViewModel缩写，也就是把MVC中的Controller演变成ViewModel。Model层代表数据模型，View代表UI组件，ViewModel是View和Model层的桥梁，数据会绑定到viewModel层并自动将数据渲染到页面中，视图变化的时候会通知viewModel层更新数据。
 
-### Vue3
+### Vue3（与Vue差异部分）
 
-模版语法：
+#### 模版语法
 
-添加全局属性(一个用于注册能够被应用内所有组件实例访问到的全局属性的对象): app.config.globalProperties
+添加全局属性(一个用于注册能够被应用内所有组件实例访问到的全局属性的对象): `app.config.globalProperties`
 
-响应式基础：
+#### 响应式基础
+
+DOM更新时机: 非同步，会在next tick更新周期中缓存状态的修改。
 
 ref(): 函数声明响应式状态， `.value`进行赋值使用，模版中不需要`.value`(会自动解包)。`const count = ref(0)`
 shallowRef(): ref的浅层作用形式。
-DOM更新时机: 非同步，会在next tick更新周期中缓存状态的修改。
 reactive(): **仅限于对象类型（集合类型），替换和解包（非ref）会丢失响应性**, ref是将内部值包装在特殊对象，而reactive将使对象本身具有响应式。`const state = reactive({ count: 0 })`
 shallowReactive(): rective()的浅层作用形式。
 
+#### 计算属性
+
+使用计算属性来描述依赖响应式状态的复杂逻辑。
+computed()： 函数返回值是一个计算属性ref，返回函数第一个参数的回调函数结果。
+计算属性会自动追踪响应式依赖并缓存，如果直接调用一个函数并没有缓存，每次都会重新调用。(`computed(() => Date.now())`，这种情况下计算属性永远不会更新)
+
+```js
+const computedXX = computed(() => xx)
+```
+
+可写计算属性
+
+```js
+const computedXX = computed({
+  get() {
+    return a.value + ' ' + b.value
+  },
+  set(newValue) { // 当computedXX = 'xxx'进行运行的时候，setter会被调用而a,b会随之更新。
+    [a.value, b.value] = newValue.split(' ')
+  }
+})
+```
+
+#### 列表渲染
+
+可以v-for中解构，可以使用of作为分隔符代替in（更接近js的迭代器语法）
+
+```html
+<li v-for="{ message } in items">
+  {{ message }}
+</li>
+
+<!-- 有 index 索引时 -->
+<li v-for="({ message }, index) in items">
+  {{ message }} {{ index }}
+</li>
+```
+
+可以遍历对象
+
+```js
+const myObject = reactive({
+  title: 'How to do lists in Vue',
+  author: 'Jane Doe',
+  publishedAt: '2016-04-10'
+})
+
+<li v-for="(value, key, index) in myObject">
+  {{ index }}. {{ key }}: {{ value }}
+</li>
+```
+
+#### 表单输入绑定
+
+true-value 和 false-value 是 Vue 特有的 attributes，仅支持和 v-model 配套使用。这里 toggle 属性的值会在选中时被设为 'yes'，取消选择时设为 'no'。
+
+```html
+<input
+  type="checkbox"
+  v-model="toggle"
+  true-value="yes"
+  false-value="no" />
+```
+
+#### 生命周期
+
+![frame-vue-lifecycle](/images/frame-vue-lifecycle.png "frame-vue-lifecycle")
+
+onMounted 钩子可以用来在组件完成初始渲染并创建 DOM 节点后运行代码
+
+```js
+onMounted(() => {
+  console.log(`the component is now mounted.`)
+})
+```
+
+#### 侦听器
+
+watch 的第一个参数可以是不同形式的“数据源”：它可以是一个 ref (包括计算属性)、一个响应式对象、一个 getter 函数、或多个数据源组成的数组：
+
+```js
+const x = ref(0)
+const y = ref(0)
+
+// 单个 ref
+watch(x, (newX) => {
+  console.log(`x is ${newX}`)
+})
+
+// getter 函数
+watch(
+  () => x.value + y.value,
+  (sum) => {
+    console.log(`sum of x + y is: ${sum}`)
+  }
+)
+
+// 多个来源组成的数组
+watch([x, () => y.value], ([newX, newY]) => {
+  console.log(`x is ${newX} and y is ${newY}`)
+})
+```
+
+不可以直接侦听响应式对象的属性值，需要用一个返回该属性的getter函数
+
+```js
+const obj = reactive({ count: 0 })
+
+// 错误，因为 watch() 得到的参数是一个 number
+watch(obj.count, (count) => {
+  console.log(`count is: ${count}`)
+})
+
+// 提供一个 getter 函数
+watch(
+  () => obj.count,
+  (count) => {
+    console.log(`count is: ${count}`)
+  }
+)
+```
+
+深层侦听器
+
+```js
+const obj = reactive({ count: 0 })
+
+obj.count++
+
+watch(obj, (newValue, oldValue) => {
+  // 在嵌套的属性变更时触发
+  // 注意：`newValue` 此处和 `oldValue` 是相等的
+  // 因为它们是同一个对象！
+})
+
+
+watch(
+  () => state.someObject,
+  (newValue, oldValue) => {
+    // 注意：`newValue` 此处和 `oldValue` 是相等的
+    // *除非* state.someObject 被整个替换了
+  },
+  { deep: true }
+)
+```
+
+即时回调
+
+```js
+watch(source, (newValue, oldValue) => {
+  // 立即执行，且当 `source` 改变时再次执行
+}, { immediate: true })
+```
+
+watchEffect，会在副作用发生期间追踪依赖。它会在同步执行过程中，自动追踪所有能访问到的响应式属性。这更方便，而且代码往往更简洁，但有时其响应性依赖关系会不那么明确。
+
+```js
+const todoId = ref(1)
+const data = ref(null)
+
+watch(todoId, async () => {
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/todos/${todoId.value}`
+  )
+  data.value = await response.json()
+}, { immediate: true })
+
+// 简化上面的代码，自动追踪todoId的依赖
+watchEffect(async () => {
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/todos/${todoId.value}`
+  )
+  data.value = await response.json()
+})
+```
+
+侦听器回调中访问Vue更新之后的DOM，需要加`flush: 'post'`
+
+```js
+watch(source, callback, { flush: 'post' })
+```
+
+```js
+watchEffect(source, callback, {flush: 'post'})
+// 或者
+import { watchPostEffect } from 'vue'
+watchPostEffect(source, callback)
+```
+
+停止侦听器
+
+```js
+const unwatch = watchEffect(() => {})
+unwatch()
+```
+
+#### 模版引用
+
+需要同名ref
+
+```html
+<script setup>
+const input = ref(null)
+
+onMounted(() => {
+  input.value.focus()
+})
+</script>
+
+<template>
+  <input ref="input"/>
+</template>
+
+```
+
+当在 v-for 中使用模板引用时，对应的 ref 中包含的值是一个数组。
+
+```html
+<input :ref="(el) => { /* 将 el 赋值给一个数据属性或 ref 变量 */ }">
+```
+
+如果组件上使用ref，则引用的值是组件的实例。如果子组件用的是setup，则属性必须通过defineExpose暴露，父组件才能访问。（setup中的东西默认是私有）
+
+#### 组件基础
+
+定义属性
+
+```html
+<script setup>
+defineProps(['title'])
+</script>
+```
+
+定义要抛出的事件
+
+```html
+<script setup>
+defineEmits(['title'])
+</script>
+```
+
+#### 深入组件
+
+全局注册: 不会被tree-shaking，依赖关系不明确
+
+```html
+<script setup>
+  import { createApp } from 'vue'
+  const app = createApp({})
+  app
+    .component('ComponentA', ComponentA)
+    .compunent('ComponentB', ComponentB)
+</script>
+```
+
+局部注册：直接引用，仅在当前组件可用
+
+```html
+<script setup>
+  import ComponentA from './ComponentA.vue'
+</script>
+```
 
 
 ### Vue3相比vue2的优点
