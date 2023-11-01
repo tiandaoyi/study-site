@@ -24,6 +24,14 @@ public class ScannerDemo {
 }
 ```
 
+### 随机数
+
+```java
+import java.util.Random;
+Random r = new Random();
+int number = r.nextInt(/*随机数的范围， 如果是100，则范围0-99*/)
+```
+
 ## 运算
 
 ### 算术运算
@@ -83,5 +91,27 @@ byte a2 = (byte)a1
 6. case如果没有break可以穿透
 7. 可以case多个，用`,`分割 `case: 1,2,3,4`
 
+## 数组
 
+数组指的是一种容器，可以存储同种数据的多个值
+
+- 数组容器在存储数据的时候，需要结合隐式转换考虑
+- int类型的数组容器(byte, short, int)
+- double类型的数组容器(byte, short, int, long, float, double)
+- 建议容器的类型和存储的数据类型保持一致
+
+两种格式
+
+1. 数据类型[] 数组名（常用）
+2. 数据类型 数组名[]
+
+数组创建完毕，长度不变
+
+初始化
+
+```java
+int[] array = new int[]{11,22,33}
+// 简写
+String[] arr1 = {"zhangsan", "lisi"}
+```
 
