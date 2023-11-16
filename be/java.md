@@ -13,6 +13,10 @@
 
 ### 键盘录入
 
+nextDouble接受小数
+next接受字符串（制表符和空格分开计算）
+nextLine接受字符串（只有回车才表示结束）
+
 ```java
 import java.util.Scanner;
 public class ScannerDemo {
@@ -115,3 +119,132 @@ int[] array = new int[]{11,22,33}
 String[] arr1 = {"zhangsan", "lisi"}
 ```
 
+索引，直接用[]，通过对应数组索引的下标获取数据 `arr1[0]`
+
+定义数组（动态初始化创建）：
+数据类型[] 数组名 = new 数据类型[数组的长度]
+String[] arr = new String[50]
+数组默认初始化值: 有规律的，跟类型有关 如0/0.0/false/\u0000(字符类型，空格)/null(引用类型)
+动态初始化，明确数组长度。
+静态初始化，手动指定元素，系统计算长度。
+
+### java内存分配
+
+栈（方法运行时使用的内存）、堆（对象、数组，new出来的关键字都是在堆空间）、方法区（存储可以运行的class文件）、本地方法栈（jvm使用）、寄存器（cpu使用）
+
+### 方法定义
+
+`public static void 方法名(int num1, int num2){}`
+
+### 方法的注意事项
+
+方法不调用就不执行
+方法与方法之间是平级关系，不能互相嵌套
+方法的编写顺序和执行顺序无关
+方法的返回值类型为void，表示该方法没有返回值，没有返回值的方法可以省略return语句不写。如果要编写return，后面不能跟具体的数据。
+
+### 方法的重载
+
+在同一个类中，方法名相同，参数不同的方法。与返回值无关
+java虚拟机会通过参数的不同来区分同名的方法（参数不同构成重载，但不建议）
+
+### 二维数组的格式
+
+```java
+int[][] arr = new int[][];
+int[][] arr = {{1,2,3},{4,5,6}};
+int[][] arr = new int[][]{{},{}};
+```
+
+### 构造方法
+
+1. 方法名与类名相同，大小写也有
+
+```java
+public class Student {
+  // 空参构造方法
+  public Student() {}
+
+  // 有参构造方法
+  public Student(int a, int b) {}
+}
+```
+
+### JavaBean类
+
+1. 类名需要见名知意
+2. 成员变量使用private修饰
+3. 提供至少两个构造方法（无参，有参）
+4. 成员方法（提供每一个成员变量对应的setXxx()/getXxx()、如果还有其他行为，也需要写上）
+
+快捷键alt+insert或者ptg插件（vscode）
+
+### System.out.printf
+
+第一部分参数：要输入的内容%s(占位)
+第二部分参数：填充的数据
+
+`System.out.printf("你好啊%s", "张三");`
+
+### 字符串
+
+String, StringBuilder, StringJonier, String Buffer, Pattern, Matcher
+
+创建String对象的两种方式
+
+1. 直接赋值 （记录的是串池里面的地址值）
+2. new关键字记录的是堆里面的地址值）
+
+```java
+char[] chs = {'a', 'b', 'c', 'd'};
+new String(chs);
+```
+
+字符串存储原理
+
+1. 直接赋值会复用字符串常量池中的
+2. new出来不会复用，而是开辟一个新的空间
+
+==号比较的是什么？
+
+1. 基本数据类型比较数据值
+2. 引用数据类型比较地址值
+
+字符串拼接的底层原理
+
+1. 如果没有变量参与，都是字符串直接相加，编译之后就是拼接之后的结果，会复用串池中的字符串。
+2. 如果有变量参与，每一行拼接的代码，都会在内存中创建新的字符串，浪费内存
+
+StringBuilder提高效率原理
+
+- 所有要拼接的内容都会往StringBuilder中放，不会创建很多无用的空间，节约内存
+
+StringBUilder源码分析
+
+1. 初始化16长度字节数组
+2. 添加的内容大于16会扩容成原来的容量*2 + 2
+3. 扩容后还不够，以实际长度为准
+
+#### 字符串比较
+
+基本数据类型比较的是具体的值，引用类型比较的是具体的值
+通常使用equals(), equalsIgnoreCase()来进行比较字符串中的内容 s1.equals(s2)
+
+其他常见的字符串方法：substring(), replace(), chatAt()
+
+#### StringBuilder
+
+可以看成是一个容器，创建之后的内容是可变的，提高操作效率。
+
+常见方法：append、reverse、length、toString
+
+#### StringJonier
+
+第一个参数是分隔符，第二个参数和第三个参数是开始结束符号（jdk8）
+
+add length toString 方法
+
+
+
+
+   
