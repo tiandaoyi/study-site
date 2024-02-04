@@ -273,6 +273,24 @@ defineEmits(['title'])
 defineEmits({
   title: 
 })
+
+// 会返回一个函数给我们使用
+const emit = defineEmits(['title', 'submit'])
+emit('submit')
+
+// ts中使用类型标注声明事件
+const tsEmit = defineEmits<{
+  (e: 'change', id: number): void
+  (e: 'update', value: string): void
+}>()
+
+// 事件校验
+const validEmit = defineEmits({
+  submit(payload) {
+    // 通过返回值为 `true` 还是为 `false` 来判断
+    // 验证是否通过
+  }
+})
 </script>
 ```
 
@@ -295,6 +313,44 @@ defineEmits({
   import ComponentA from './ComponentA.vue'
 </script>
 ```
+
+`v-model`在组件上的使用默认使用的是`modelValue`为prop，`update:modelValue`为对应的事件，我们可以指定参数来更改名字
+
+```html
+<MyComponent v-model:title="bookTitle" />
+```
+
+通过指定参数与事件名的技巧，我们可以在单个实例上绑定多个`v-model`
+
+```html
+<MyComponent v-model:title="bookTitle" v-model:name="bookName"/>
+```
+
+```html
+<script setup>
+  defineProps({
+    title: String,
+    name: String
+  })
+  definedEmits(['update:title', 'update:name'])
+</script>
+<template>
+  <template>
+  <input
+    type="text"
+    :value="name"
+    @input="$emit('update:name', $event.target.value)"
+  />
+  <input
+    type="text"
+    :value="title"
+    @input="$emit('update:title', $event.target.value)"
+  />
+</template>
+```
+
+#### 透传Attributes
+
 
 ### Vue3相比vue2的优点
 
