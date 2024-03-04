@@ -4,7 +4,7 @@
 
 Vue是一个MVVM框架，MVVM是Model-View-ViewModel缩写，也就是把MVC中的Controller演变成ViewModel。Model层代表数据模型，View代表UI组件，ViewModel是View和Model层的桥梁，数据会绑定到viewModel层并自动将数据渲染到页面中，视图变化的时候会通知viewModel层更新数据。
 
-### Vue3（与Vue差异部分）
+### Vue3
 
 #### 模版语法
 
@@ -15,9 +15,63 @@ Vue是一个MVVM框架，MVVM是Model-View-ViewModel缩写，也就是把MVC中�
 DOM更新时机: 非同步，会在next tick更新周期中缓存状态的修改。
 
 ref(): 函数声明响应式状态， `.value`进行赋值使用，模版中不需要`.value`(会自动解包)。`const count = ref(0)`
+
 shallowRef(): ref的浅层作用形式。
+
 reactive(): **仅限于对象类型（集合类型），替换和解包（非ref）会丢失响应性**, ref是将内部值包装在特殊对象，而reactive将使对象本身具有响应式。`const state = reactive({ count: 0 })`
+
 shallowReactive(): rective()的浅层作用形式。
+
+::: tip
+ref和reactive简单的实现
+
+```js
+// 用于创建一个包装过的响应式对象。
+function ref(val) {
+  // ref 返回一个包含 value 属性的对象
+  return {
+    value: val
+  };
+}
+
+// 用于创建一个基于 Proxy 的响应式对象。
+function reactive(obj) {
+  // 使用 Proxy 对象包裹目标对象
+  return new Proxy(obj, {
+    get(target, key, receiver) {
+      // 读取属性时返回响应式对象
+      const value = Reflect.get(target, key, receiver);
+      if (typeof value === 'object' && value !== null) {
+        return reactive(value);
+      }
+      return value;
+    },
+    set(target, key, value, receiver) {
+      // 设置属性时触发更新
+      const result = Reflect.set(target, key, value, receiver);
+      // 触发更新逻辑，比如通知界面重新渲染
+      console.log('更新了：', key, value);
+      return result;
+    }
+  });
+}
+
+// 示例
+const nameRef = ref('zhangsan');
+console.log(nameRef.value); // 输出: zhangsan
+
+const user = reactive({
+  name: 'lisi',
+  age: 25
+});
+
+console.log(user.name); // 输出: lisi
+
+user.age = 26; // 输出: 更新了： age 26
+
+```
+
+:::
 
 #### 计算属性
 
@@ -173,6 +227,15 @@ watch(source, (newValue, oldValue) => {
 }, { immediate: true })
 ```
 
+一次性侦听器（3.4+）
+
+```js
+watch(source, (newValue, oldValue) => {
+  // 仅执行一次
+}, { once: true })
+
+```
+
 watchEffect，会在副作用发生期间追踪依赖。它会在同步执行过程中，自动追踪所有能访问到的响应式属性。这更方便，而且代码往往更简洁，但有时其响应性依赖关系会不那么明确。
 
 ```js
@@ -195,7 +258,9 @@ watchEffect(async () => {
 })
 ```
 
-侦听器回调中访问Vue更新之后的DOM，需要加`flush: 'post'`
+默认情况下，侦听器回调会在父组件更新 (如有) 之后、所属组件的 DOM 更新之前被调用。
+
+如果想在侦听器回调中能访问被 Vue 更新之后的所属组件的 DOM，需要加`flush: 'post'`
 
 ```js
 watch(source, callback, { flush: 'post' })
@@ -208,7 +273,18 @@ import { watchPostEffect } from 'vue'
 watchPostEffect(source, callback)
 ```
 
-停止侦听器
+同步侦听器，能在vue进行任何更新之前触发
+
+```js
+watch(source, callback, {flush: sync})
+```
+
+```js
+watchEffect(source, callback, {flush: sync})
+watchSyncEffect(source, callback)
+```
+
+停止侦听器(只有异步回调时才需要)
 
 ```js
 const unwatch = watchEffect(() => {})
@@ -349,10 +425,213 @@ const validEmit = defineEmits({
 </template>
 ```
 
+defineModel(3.4+)
+
+defineModel() 返回的值是一个 ref。它可以像其他 ref 一样被访问以及修改，不过它能起到在父组件和当前变量之间的双向绑定的作用（替代了原来的props和emit）：
+
+```js
+const model = defineModel()
+```
+
+- 它的 .value 和父组件的 v-model 的值同步；
+- 当它被子组件变更了，会触发父组件绑定的值一起更新。
+
+```js
+// 使 v-model 必填
+const model = defineModel({ required: true })
+
+// 提供一个默认值
+const model = defineModel({ default: 0 })
+```
+
 #### 透传Attributes
 
+在父组件中，给子组件的属性或者事件，如果没有声明props或者emits，则会透传到子组件的根元素上。
 
-### Vue3相比vue2的优点
+禁用透传（3.3+）
+
+```js
+defineOptions({
+  inheritAttrs: false
+})
+```
+
+可以在模板表达式中，直接使用$attrs，$attrs包含了声明props和emits之外的其他attribute（class、style、v-on等。）
+
+- 和 props 有所不同，透传 attributes 在 JavaScript 中保留了它们原始的大小写，所以像 foo-bar 这样的一个 attribute 需要通过 $attrs['foo-bar'] 来访问。
+
+- 像 @click 这样的一个 v-on 事件监听器将在此对象下被暴露为一个函数 $attrs.onClick。
+
+如果是多根节点，将不会透传，只能使用v-bind="$attrs"给某个节点
+
+js中访问attr
+
+```js
+<script setup>
+import { useAttrs } from 'vue'
+
+const attrs = useAttrs()
+</script>
+```
+
+#### 依赖注入 Provide/Inject
+
+```js
+import { ref, provide } from 'vue'
+const count = ref(0)
+provide('key', count)
+```
+
+应用层提供依赖
+
+```js
+import { createApp } from 'vue'
+const app = createApp({})
+app.provide(/* 注入名 */ 'message', /* 值 */ 'hello!')
+```
+
+注入
+
+```js
+import { inject } from 'vue'
+const count = inject('key') // const.value -> 0
+```
+
+inject第二个参数是默认值，第三个参数是是否工厂函数，可以使用工厂函数来初始化，避免产生副作用或者额外的计算
+
+```js
+const value = inject('key', () => new ExpensiveClass(), true)
+```
+
+如果想修改建议在provide的时候传一个方法
+
+```js
+provide('message', { message, updateMessage })
+```
+
+如果想确保不能被修改，可以加只读
+
+```js
+const message = ref('hello')
+provide('message', readonly(message))
+```
+
+大型应用时，建议使用Symbol作为key
+
+```js
+const mySymbol = Symbol()
+provide(mySymbol, {/* 数据 */})
+```
+
+### 异步组件
+
+```js
+import { defineAsyncComponent } from 'vue'
+
+const AsyncComp = defineAsyncComponent(() => {
+  return new Promise((resolve, reject) => {
+    // ...从服务器获取组件
+    resolve(/* 获取到的组件 */)
+  })
+})
+// ... 像使用其他一般组件一样使用 `AsyncComp`
+```
+
+ES模块导入也支持
+
+```js
+import { defineAsyncComponent } from 'vue'
+
+const APage = defineAsyncComponent(() => {
+  return import('./a.vue')
+})
+```
+
+#### 组合式函数
+
+```js
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
+
+const x = ref(0)
+const y = ref(0)
+
+function update(event) {
+  x.value = event.pageX
+  y.value = event.pageY
+}
+
+onMounted(() => window.addEventListener('mousemove', update))
+onUnmounted(() => window.removeEventListener('mousemove', update))
+</script>
+
+<template>Mouse position is at: {{ x }}, {{ y }}</template>
+```
+
+```js
+// a.js
+import { ref, onMounted, onUnmounted } from 'vue'
+export function useMouse() {
+  const x = ref(0)
+  const y = ref(0)
+
+  function update(event) {
+    x.value = event.pageX
+    y.value = event.pageY
+  }
+
+  onMounted(() => window.addEventListener('mousemove', update))
+  onUnmounted(() => window.removeEventListener('mousemove', update))
+  return {x, y}
+}
+// b.vue
+<script setup>
+import { useMouse } from 'a.js'
+const {x, y} = useMouse()
+</script>
+<template>Mouse position is at: {{ x }}, {{ y }}</template>
+```
+
+toValue() 是一个在 3.3 版本中新增的 API。它的设计目的是将 ref 或 getter 规范化为值。如果参数是 ref，它会返回 ref 的值；如果参数是函数，它会调用函数并返回其返回值。否则，它会原样返回参数。它的工作方式类似于 unref()，但对函数有特殊处理。
+
+#### TS扩展全局属性
+
+```js
+import axios from 'axios'
+declare module 'vue' {
+  interface ComponentCustomProperties {
+    $http: typeof axios
+    $translate: (key: string) => string
+  }
+}
+```
+
+#### Suspense
+
+`<Suspense> `是一个内置组件，用来在组件树中协调对异步依赖的处理。它让我们可以在组件树上层等待下层的多个嵌套异步依赖项解析完成，并可以在等待时渲染一个加载状态。
+
+#### vue3性能优化
+
+> https://cn.vuejs.org/guide/best-practices/performance.html
+
+页面加载优化
+
+1. 选用正确的架构
+2. 包体积与 Tree-shaking 优化
+3. 代码分割
+
+更新优化
+
+1. 更新稳定（props、v-once、v-memo）
+2. 计算属性稳定性
+
+通用优化
+
+1. 大型虚拟列表（vue-virtual-scroller、vue-virtual-scroll-grid、vueuc/VVirtualList）
+2. 减少大型不可变数据的响应性开销
+3. 避免不必要的组件抽象
+
+### Vue3优点总结
 
 1. 性能优化：Vue3在性能方面进行了很多优化，包括更好的虚拟DOM渲染性能和更小的包大小
 2. Composition API：Vue 3 引入了 Composition API，这是一种新的组织组件逻辑的方式。它使组件逻辑更容易组织、复用和测试。（Vue 2也支持了）
@@ -364,7 +643,9 @@ const validEmit = defineEmits({
 8. 更好的 TypeScript 支持： Vue 3 提供了更好的 TypeScript 支持，包括更准确的类型推断和类型定义。
 9. 更强大的插槽： Vue 3 的插槽支持更强大的特性，如动态插槽名称和新的 `<template #xxx>` 语法。（可以单独渲染父组件和子组件）
 
-### Vue的响应式原理
+### Vue的原理
+
+#### 响应式原理
 
 ![network-osi](/images/frame-vue.png "frame-vue")
 
@@ -424,9 +705,9 @@ let app = new Vue({
 })
 ```
 
-### Vue3与Vue2源码层面
+#### Vue3与Vue2源码层面分析
 
-实现双向绑定 Proxy 与 Object.defineProperty 相比优劣如何?
+##### 实现双向绑定 Proxy 与 Object.defineProperty 相比优劣如何?
 
 - `Object.definedProperty`的作用是劫持一个对象的属性，劫持属性的getter和setter方法，在对象的属性发生变化时进行特定的操作。而 Proxy劫持的是整个对象。
 - `Proxy`会返回一个代理对象，我们只需要操作新对象即可，而Object.defineProperty只能遍历对象属性直接修改
@@ -434,3 +715,5 @@ let app = new Vue({
 - 尽管`Object.defineProperty`有诸多缺陷，但是其兼容性要好于Proxy。
 
 ## React
+
+## Angular
