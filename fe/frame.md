@@ -716,4 +716,222 @@ let app = new Vue({
 
 ## React
 
+### 描述UI
+
+React组件
+
+1. `export default function 组件名() {}` 组件名首字母大写
+2. 组件中返回标签，标签看起来像是html，实际上是Javascript，这是JSX语法。
+3. return的内容不在一行，需要放在一对括号中。
+4. 组件在页面的顶层定义，不要嵌套
+
+props展开语法
+
+```js
+function Profile(props) {
+  return (
+    <div className="card">
+      <Avatar {...props} />
+    </div>
+  );
+}
+```
+
+接收子组件 使用children
+
+```js
+function Avatar({children}) {
+  return (
+    <div>
+      {children}
+    </div>
+  )
+}
+
+export default function App() {
+  return (
+    <Avatar>
+      这里可以是任何内容/组件
+    </Avatar>
+  )
+}
+```
+
+JSX规则
+
+- 只能返回一个根元素
+- 标签必须闭合
+- 驼峰语法给大部分属性命名（class是保留字，所以用className）
+
+渲染列表时，为每个列表项展示多个节点（因为空节点没办法绑定key）,一个合适的 key 可以帮助 React 推断发生了什么，从而得以正确地更新 DOM 树。
+
+```js
+import { Fragment } from 'react';
+const listItems = people.map(person =>
+  <Fragment key={person.id}>
+    <h1>{person.name}</h1>
+    <p>{person.bio}</p>
+  </Fragment>
+);
+```
+
+### 交互
+
+父子组件传参
+
+```js
+function Button({ onClick, children}) {
+  return (
+    <button onClick={onClick}>
+      {children}
+    </button>
+  )
+}
+
+function App() {
+  function handlePlayClick() {
+    alert(`正在播放！`);
+  }
+  return (
+    <Button onClick={handlePlayClick}>
+      <span>这是个按钮</span>
+    </Button>
+  )
+}
+```
+
+结合useState
+
+```js
+import * as React from 'react'
+function Button({ onClick, children}) {
+  return (
+    <button onClick={onClick}>
+      {children}
+    </button>
+  )
+}
+
+
+export default function Toolbar() {
+  let [count, setCount ] = React.useState(0)
+  function handlePlayClick() {
+    alert(`播放次数+1！`);
+    setCount(count + 1)
+  }
+  return (
+    <Button onClick={handlePlayClick}>
+      <span>播放次数： {count}</span>
+    </Button>
+  )
+}
+```
+
+在 React 中所有事件都会传播，除了 onScroll，它仅适用于你附加到的 JSX 标签。（向上冒泡/传播）
+
+事件后增加Capture，可以捕获所有子元素上的所有事件，即使他们禁止冒泡，如onClickCapture
+
+```js
+function Button({onClick, children}) {
+  return (
+    <button onClick={(e) => {
+      e.stopPropagation();
+      onClick();
+    }}>{children}</button>
+  )
+}
+  
+export default function App() {
+  function onHandleClick() {
+    alert('上层事件')
+  }
+  return (
+    <div onClick={onHandleClick}>
+      <Button onClick={() => alert('底层事件')}>这是一个按钮</Button>
+    </div>
+  )
+}
+```
+
+阻止默认行为，比如onForm后刷新页面
+
+```js
+export default function Signup() {
+  return (
+    <form onSubmit={e => {
+      e.preventDefault();
+      alert('提交表单！');
+    }}>
+      <input />
+      <button>发送</button>
+    </form>
+  );
+}
+```
+
+#### 更新函数
+
+n => n + 1 被称为 更新函数。当你将它传递给一个 state 设置函数时：
+
+- React 会将此函数加入队列，以便在事件处理函数中的所有其他代码运行后进行处理。
+- 在下一次渲染期间，React 会遍历队列并给你更新之后的最终 state。
+
+```js
+// 原来的setNumber多次，每次state的值没有变化，结果是一样的，如果使用更新函数，可以在下一次渲染期间，遍历队列更新
+const [number, setNumber] = useState(0)
+// old
+setNumber(n + 1)
+setNumber(n + 1)
+// new
+setNumber(n => n + 1)
+setNumber(n => n + 1)
+```
+
+#### state的状态队列原理
+
+```js
+function getFinalState(baseState, queue) {
+  let finalState = baseState;
+  // 如果是直接改的值，则会覆盖
+  // 如果是队列，则会以之前的值基础上进行处理
+  for (let item of queue) {
+    if (typeof item === 'function') {
+      finalState = item(finalState)
+    } else {
+      finalState = item
+    }
+  }
+  return finalState;
+}
+
+getFinalState(0, [5, (n) => n + 1, 42]) // 42
+```
+
+#### 多层嵌套使用Immer
+
+```js
+import { useImmer } from 'use-immer';
+
+function Form() {
+  const [person, updatePerson] = useImmer({
+    name: 'Niki de Saint Phalle',
+    artwork: {
+      title: 'Blue Nana',
+      city: 'Hamburg',
+      image: 'https://i.imgur.com/Sd1AgUOm.jpg',
+    }
+  });
+
+  function handleNameChange(e) {
+    updatePerson(draft => {
+      draft.name = e.target.value;
+    });
+  }
+}
+```
+
+#### 状态管理
+
+
+
 ## Angular
