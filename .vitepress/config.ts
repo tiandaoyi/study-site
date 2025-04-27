@@ -22,6 +22,11 @@ const Node: DefaultTheme.NavItemWithLink[] = [
   { text: 'node', link: '/node/node' },
 ]
 
+const Java: DefaultTheme.NavItemWithLink[] = [
+  { text: 'java', link: '/be/java' },
+  { text: 'spring-boot', link: '/be/spring-boot' }
+]
+
 const Algorithm: DefaultTheme.NavItemWithLink[] = [
   { text: '算法', link: '/algorithm/algorithm' },
 ]
@@ -44,6 +49,16 @@ const Nav: DefaultTheme.NavItem[] = [
       },
     ],
     activeMatch: '^/fe/',
+  },
+  {
+    text: 'Java',
+    items: [
+      {
+        text: 'Java',
+        items: Java,
+      },
+    ],
+    activeMatch: '^/java/',
   },
   {
     text: 'Node',
