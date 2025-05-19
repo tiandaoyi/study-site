@@ -145,7 +145,7 @@ function buildName(firstName: string, lastName: string = 'world') {
 
 剩余参数: 我们可以用数组的类型来定义，并且rest只能是最后一个参数
 
-```typscript
+```typescript
 function push(array: any[], ...items: any[]) {
   items.forEach(function(item) {
     array.push(item);
