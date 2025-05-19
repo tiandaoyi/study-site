@@ -6,11 +6,19 @@ LABEL maintainer="495060071@qq.com"
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
     && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
-# 安装基础工具并清理缓存
-# 使用 --no-cache 保证索引最新且不保留本地缓存
-RUN apk add --no-cache bash curl iputils git
+# 安装基础工具、网络测试及构建依赖
+# 包含 git, curl, ping 工具，以及编译原生模块所需的 python3、make、g++
+RUN apk add --no-cache \
+        bash \
+        curl \
+        iputils \
+        git \
+        python3 \
+        make \
+        g++ \
+        libc6-compat
 
-# 可选：在构建前测试连通性
+# 可选：测试 DNS 和镜像源连通性
 RUN echo "# Testing DNS and HTTP connectivity" \
     && nslookup mirrors.aliyun.com \
     && ping -c 3 mirrors.aliyun.com || echo "Warning: ping failed"
@@ -25,9 +33,11 @@ WORKDIR /app
 COPY .dockerignore ./
 COPY ./ /app
 
-# 安装依赖 & 构建文档
-RUN pnpm install --frozen-lockfile \
-    && pnpm docs:build
+# 安装依赖
+RUN pnpm install --frozen-lockfile --reporter ndjson
+
+# 构建文档
+RUN pnpm docs:build
 
 
 # Stage 2: Production
