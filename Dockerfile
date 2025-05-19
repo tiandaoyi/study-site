@@ -1,7 +1,7 @@
-FROM node:16-alpine as build
+FROM node:20-alpine as build
 LABEL maintainer "495060071@qq.com"
 
-RUN apk update && apk add git
+RUN apk update && apk add --no-cache git
 
 # 安装npm
 RUN npm config set registry https://registry.npmmirror.com/
