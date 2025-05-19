@@ -1,4 +1,3 @@
-```dockerfile
 # Stage 1: Build
 FROM node:20-alpine AS build
 LABEL maintainer="495060071@qq.com"
@@ -24,7 +23,7 @@ RUN echo "# Testing DNS and HTTP connectivity" \
     && nslookup mirrors.aliyun.com \
     && ping -c 3 mirrors.aliyun.com || echo "Warning: ping failed"
 
-# 全局配置 npm & pnpm 使用国内镜像，并关闭严格 SSL 校验以避免过期证书问题
+# 全局配置 npm & pnpm 使用国内镜像，并关闭严格 SSL 校验
 RUN npm config set registry https://registry.npmmirror.com/ \
     && npm config set strict-ssl false \
     && npm install -g pnpm@7.33.7 \
@@ -36,8 +35,8 @@ WORKDIR /app
 COPY .dockerignore ./
 COPY ./ /app
 
-# 安装依赖，并指定使用国内注册表
-RUN pnpm install --registry=https://registry.npmmirror.com/ --strict-ssl=false --frozen-lockfile --reporter ndjson
+# 安装依赖（去除 --strict-ssl 参数）
+RUN pnpm install --registry=https://registry.npmmirror.com/ --frozen-lockfile --reporter ndjson
 
 # 构建文档
 RUN pnpm docs:build
@@ -47,4 +46,3 @@ FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html/
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
-```
