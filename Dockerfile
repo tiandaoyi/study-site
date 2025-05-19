@@ -1,13 +1,12 @@
+```dockerfile
 # Stage 1: Build
 FROM node:20-alpine AS build
 LABEL maintainer="495060071@qq.com"
 
-# 切换到国内镜像源（可选，提高可靠性）
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
-    && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+# 切换到国内镜像源
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
-# 安装基础工具、网络测试及构建依赖
-# 包含 git, curl, ping 工具，以及编译原生模块所需的 python3、make、g++
+# 安装基础工具及依赖（包含 CA 证书）
 RUN apk add --no-cache \
         bash \
         curl \
@@ -16,32 +15,36 @@ RUN apk add --no-cache \
         python3 \
         make \
         g++ \
-        libc6-compat
+        libc6-compat \
+        ca-certificates \
+    && update-ca-certificates
 
-# 可选：测试 DNS 和镜像源连通性
+# 可选：测试网络连通性
 RUN echo "# Testing DNS and HTTP connectivity" \
     && nslookup mirrors.aliyun.com \
     && ping -c 3 mirrors.aliyun.com || echo "Warning: ping failed"
 
-# 配置 npm & pnpm 镜像
+# 全局配置 npm & pnpm 使用国内镜像，并关闭严格 SSL 校验以避免过期证书问题
 RUN npm config set registry https://registry.npmmirror.com/ \
+    && npm config set strict-ssl false \
     && npm install -g pnpm@7.33.7 \
     && pnpm config set registry https://registry.npmmirror.com/ \
+    && pnpm config set strict-ssl false \
     && pnpm config set sass_binary_site https://npm.taobao.org/mirrors/node-sass/
 
 WORKDIR /app
 COPY .dockerignore ./
 COPY ./ /app
 
-# 安装依赖
-RUN pnpm install --frozen-lockfile --reporter ndjson
+# 安装依赖，并指定使用国内注册表
+RUN pnpm install --registry=https://registry.npmmirror.com/ --strict-ssl=false --frozen-lockfile --reporter ndjson
 
 # 构建文档
 RUN pnpm docs:build
-
 
 # Stage 2: Production
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html/
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
+```
