@@ -46,17 +46,28 @@
 # CMD ["nginx", "-g", "daemon off;"]
 
 
+
+# ----------
+
+
 # 只用 Nginx 做静态站点
+# FROM nginx:alpine
+
+# WORKDIR /usr/share/nginx/html
+
+# # 拷贝构建好的静态文件
+# COPY dist/ .
+
+# # 暴露默认 80 端口
+# EXPOSE 80
+
+# # 启动 Nginx 前台模式
+# CMD ["nginx", "-g", "daemon off;"]
+
+
+# --------------
 FROM nginx:alpine
-
-WORKDIR /usr/share/nginx/html
-
-# 拷贝构建好的静态文件
-COPY dist/ .
-
-# 暴露默认 80 端口
+# 直接将本地的dist目录拷贝到Nginx容器
+COPY dist /usr/share/nginx/html
 EXPOSE 80
-
-# 启动 Nginx 前台模式
 CMD ["nginx", "-g", "daemon off;"]
-
