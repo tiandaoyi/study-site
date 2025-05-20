@@ -3,7 +3,7 @@ FROM node:20-alpine AS build
 LABEL maintainer="495060071@qq.com"
 
 # 切换到国内镜像源
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+#RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 # 安装编译工具和 CA 证书
 RUN apk add --no-cache \
@@ -18,8 +18,8 @@ RUN apk add --no-cache \
     && update-ca-certificates
 
 # 测试网络连通性（可选）
-RUN nslookup mirrors.aliyun.com \
- && ping -c 2 mirrors.aliyun.com || echo "⚠️ DNS 或网络异常"
+# RUN nslookup mirrors.aliyun.com \
+#  && ping -c 2 mirrors.aliyun.com || echo "⚠️ DNS 或网络异常"
 
 WORKDIR /app
 
@@ -28,19 +28,13 @@ COPY package.json pnpm-lock.yaml ./
 
 # 安装所有依赖，包括 devDependencies
 # --prod=false 强制安装 devDependencies
-RUN npm config set registry https://registry.npmmirror.com/ \
- && npm config set strict-ssl false \
+RUN npm config set strict-ssl false \
  && npm install -g pnpm@7.33.7 \
- && pnpm config set registry https://registry.npmmirror.com/ \
  && pnpm config set strict-ssl false \
  && pnpm install --frozen-lockfile --reporter ndjson --prod=false
 
 # 拷贝项目源代码
 COPY . .
-
-# 修正文档中所有 ```typscript → ```typescript
-# （可选：如果你已经在本地改好了，就不需要这步）
-# RUN sed -i 's/```typscript/```typescript/g' -r $(find . -name '*.md')
 
 # 构建文档
 RUN pnpm docs:build
