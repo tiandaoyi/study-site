@@ -46,14 +46,17 @@
 # CMD ["nginx", "-g", "daemon off;"]
 
 
-# 使用 Nginx 作为静态文件服务器
+# 只用 Nginx 做静态站点
 FROM nginx:alpine
 
-# 复制构建好的 dist 目录到 nginx 静态目录
-COPY ./dist /usr/share/nginx/html
+WORKDIR /usr/share/nginx/html
 
-# 开放 80 端口
+# 拷贝构建好的静态文件
+COPY dist/ .
+
+# 暴露默认 80 端口
 EXPOSE 80
 
-# 启动 nginx
+# 启动 Nginx 前台模式
 CMD ["nginx", "-g", "daemon off;"]
+
