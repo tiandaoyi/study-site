@@ -4,6 +4,6 @@ public/user-avatars
 
 node_modules
 
-dist
+# dist
 .DS_Store
 ._*
